@@ -111,7 +111,7 @@ def capture(start, end, exec_at_time_callback=None, etl=False, fps=50):
         with open(os.path.join(tasks_config.ETPATH, 'etmain', 'init-wav.cfg'), 'w') as file:
             file.write('exec_at_time '+str(start)+' record-wav')
         p = subprocess.Popen([os.path.join(tasks_config.ETPATH, 'ET.exe'),
-                              '+set', 'cl_profile', 'merlin-stream',
+                              '+set', 'cl_profile', 'render-worker',
                               '+set', 'com_ignorecrash', '1',
                               '+viewlog', '1', '+logfile', '2',
                               '+set', 'fs_game', 'etpro', '+set com_maxfps 125',
