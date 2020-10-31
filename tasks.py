@@ -143,13 +143,12 @@ def ffmpeg_args(name, country, crf, fps=50):
     args = ['ffmpeg', '-hide_banner', '-loglevel', 'warning', '-y', '-thread_queue_size', '1024',
             '-progress', 'pipe:1',
             '-framerate', str(fps), '-i', 'etpro/screenshots/shot%04d.tga']
-    if name != "":
+    if name != "" and country != "None":
         args += [
             '-filter_complex',
             "[0] [1] overlay=25:150 [b]; [b] drawtext=fontfile=courbd.ttf:text='" +
             name + "': fontcolor=white: fontsize=50: x=100: y=150+45.0-text_h-5",
         ]
-    if country != "None":
         args += ['-i', '4x3/' + country + '.png']
     args += ['-i', 'etpro/wav/synctest.wav', '-shortest', '-crf', str(crf), '-pix_fmt', 'yuv420p', 'render.mp4']
     return args
