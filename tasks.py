@@ -155,7 +155,7 @@ def ffmpeg_args(name, country, crf, fps=50):
 
 
 @dramatiq.actor(queue_name='render')
-def render(render_id, demo_url, start, end, name=None, country=None, crf='23', etl=False):
+def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl=False):
     print(locals())
     url_parsed = urlparse(demo_url)
 
