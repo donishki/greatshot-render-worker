@@ -2,3 +2,4 @@ dramatiq[redis]
 requests
 sentry_sdk
 sentry_dramatiq
+redis
