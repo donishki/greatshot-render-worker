@@ -1,4 +1,4 @@
-ETPATH = 'C:\\Games\\ET\\'
+ETPATH = r"C:\Games\ET"
 ET_HOMEPATH = ETPATH  # fs_homepath usually different on linux
 ET_EXECUTABLE = 'ET.exe'  # on linux probably `et.sh` - sound fix script
 REDIS = 'redis://:localhost'

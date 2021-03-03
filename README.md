@@ -1,10 +1,12 @@
 worker for creating renders for https://github.com/mittermichal/greatshot-web
 
+
 # Hosting worker
 
 If you want to host render worker for https://greatshot.xyz, I have to give you credentials for redis server and upload http auth.
- - have W:ET 2.60b with etpro mod
+ - have W:ET 2.60b with etpro mod and usual competitive maps in etmain
 - install python 3.5 or greater
+- install git
 - `git clone https://github.com/mittermichal/greatshot-render-worker`
 - `cd greatshot-render-worker`
 - `pip install -r requirements.txt`
