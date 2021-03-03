@@ -139,7 +139,7 @@ def capture(start, end, exec_at_time_callback=None, etl=False, fps=50):
 
 
 def delete_screenshots(mod='etpro'):
-    for file in glob.glob(os.path.join(tasks_config.ET_HOMEPATH, mod+'/screenshots/*.tga')):
+    for file in glob.glob(os.path.join(tasks_config.ET_HOMEPATH, mod, 'screenshots/*.tga')):
         os.remove(file)
 
 
@@ -238,7 +238,7 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
     r = requests.put(
         url_parsed.scheme + '://' + url_parsed.netloc + '/renders',
         auth=(tasks_config.RENDER_UPLOAD_AUTH_NAME, tasks_config.RENDER_UPLOAD_AUTH_PW),
-        files={filename: open(tasks_config.ET_HOMEPATH + 'render.mp4', 'rb')})
+        files={filename: open(os.path.join(tasks_config.ET_HOMEPATH,'render.mp4'), 'rb')})
     # print('upload r code:' + str(r.status_code))
     if r.status_code == 200:
         set_render_status(url_parsed, render_id, 'finished', 100)
