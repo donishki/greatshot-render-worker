@@ -250,10 +250,11 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
 
 def ffmpeg(args, frame_processed_callback=None):
     p = subprocess.Popen(args, cwd=tasks_config.ET_HOMEPATH, stdout=subprocess.PIPE, universal_newlines=True)
-    for stdout_line in iter(p.stdout.readline, ""):
-        find = re.findall(r'frame=(\d+)', stdout_line)
-        if len(find):
-            frame_processed_callback(int(find[0]))
+    if frame_processed_callback is not None:
+        for stdout_line in iter(p.stdout.readline, ""):
+            find = re.findall(r'frame=(\d+)', stdout_line)
+            if len(find):
+                frame_processed_callback(int(find[0]))
     p.stdout.close()
     return p.wait(timeout=30)
 
