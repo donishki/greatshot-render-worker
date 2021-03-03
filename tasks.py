@@ -144,7 +144,7 @@ def delete_screenshots(mod='etpro'):
 
 
 def ffmpeg_args(name, country, crf, fps=50):
-    args = ['ffmpeg', '-hide_banner', '-loglevel', 'warning', '-y', '-thread_queue_size', '1024',
+    args = [tasks_config.FFMPEG, '-hide_banner', '-loglevel', 'warning', '-y', '-thread_queue_size', '1024',
             '-progress', 'pipe:1',
             '-framerate', str(fps), '-i', os.path.join(tasks_config.ET_HOMEPATH, 'etpro/screenshots/shot%04d.tga')]
     if name != "" and country != "None":
