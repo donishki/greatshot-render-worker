@@ -238,6 +238,9 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
 
     frame_count = len(glob.glob(os.path.join(tasks_config.ET_HOMEPATH + 'etpro', 'screenshots', 'shot[0-9]*.tga')))
 
+    if frame_count == 0:
+        raise RenderException("no screenshots captured")
+
     def frame_processed_callback(frame):
         set_render_status(url_parsed, render_id,
                           'encoding video {}/{} frame'.format(frame, frame_count),
