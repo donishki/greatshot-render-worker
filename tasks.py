@@ -13,14 +13,12 @@ from time import sleep
 from threading import Thread
 
 if __name__ == "__main__":
-    try:
+    if hasattr(tasks_config, 'SENTRY_DSN'):
         sentry_sdk.init(
             tasks_config.SENTRY_DSN,
             integrations=[sentry_dramatiq.DramatiqIntegration()],
         )
-    except AttributeError:
-        # WITHOUT SENTRY
-        pass
+
 
 redis_broker = RedisBroker(url=tasks_config.REDIS, middleware=[], namespace=tasks_config.DRAMATIQ_NS)
 dramatiq.set_broker(redis_broker)
