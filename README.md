@@ -26,8 +26,10 @@ If you want to host render worker for https://greatshot.xyz, I have to give you 
       - RENDER_UPLOAD_AUTH_PW = ...
   - DRAMATIQ_NS = 'prod'
   - FFMPEG = \<path to ffmpeg.exe with binary name included\>
-- copy profiles directory to etpro - contains render-worker profile with config
-- copy `etmain/preinit-wav.cfg` into etmain
+- copy `ET\etpro\profiles` directory to etpro - contains render-worker profile with config
+
+- test screenshot capture by running: `python test_capture_progress.py`
+
 - run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or run `run_worker.bat`
 - pressing CTRL + C once should gracefully finish tasks, pressing it second time will kill it completely
-- you can create shortut to run_worker.bat for easy access
+- you can create shortcut to run_worker.bat for easy access
