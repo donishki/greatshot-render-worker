@@ -14,18 +14,18 @@ If you want to host render worker for https://greatshot.xyz, I have to give you 
 - open command line
 - `git clone https://github.com/mittermichal/greatshot-render-worker`
 - `cd greatshot-render-worker`
-- optionally create virtual enviroment
+- optionally create and activate python virtual environment
 - `pip install -r requirements.txt`
 
 - create copy of tasks_config.sample.py and name it tasks_config.py: `cp tasks_config.sample.py tasks_config.py`
 - edit tasks_config.py:
-  - ETPATH = \<location ET.exe is\>
+  - ETPATH = r"\<location ET.exe is\>"
   - REDIS = \<redis credentials\>
   - http upload auth, contact me to get it and also REDIS:
       - RENDER_UPLOAD_AUTH_NAME = ...
       - RENDER_UPLOAD_AUTH_PW = ...
   - DRAMATIQ_NS = 'prod'
-  - FFMPEG = \<path to ffmpeg.exe with binary name included\>
+  - FFMPEG = r"\<path to ffmpeg.exe with binary name included\>"
 - copy `ET\etpro\profiles` directory to etpro - contains render-worker profile with config
 
 - test screenshot capture by running: `python test_capture_progress.py`
@@ -33,3 +33,6 @@ If you want to host render worker for https://greatshot.xyz, I have to give you 
 - run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or run `run_worker.bat` or `run_worker_venv.bat` if you use venv 
 - pressing CTRL + C once should gracefully finish tasks, pressing it more times will kill it completely
 - you can create shortcut to run_worker.bat for easy access
+
+# Hosting worker on Linux
+- same as on Windows, if you manage to [fix sound](https://www.crossfire.nu/threads/48476/trouble-installing-et-on-linux#c4490862), then setting up this is easy :)
