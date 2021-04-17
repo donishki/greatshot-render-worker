@@ -1,7 +1,7 @@
 worker for creating renders for https://github.com/mittermichal/greatshot-web
 
 
-# Hosting worker
+# Hosting worker on Windows
 
 If you want to host render worker for https://greatshot.xyz, I have to give you credentials for redis server and upload http auth.
  - have W:ET 2.60b with etpro mod and usual competitive maps in etmain. At the moment it's not possible to run it headless on some server.
@@ -30,6 +30,6 @@ If you want to host render worker for https://greatshot.xyz, I have to give you 
 
 - test screenshot capture by running: `python test_capture_progress.py`
 
-- run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or run `run_worker.bat`
-- pressing CTRL + C once should gracefully finish tasks, pressing it second time will kill it completely
+- run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or run `run_worker.bat` or `run_worker_venv.bat` if you use venv 
+- pressing CTRL + C once should gracefully finish tasks, pressing it more times will kill it completely
 - you can create shortcut to run_worker.bat for easy access
