@@ -236,7 +236,7 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
     else:
         args = ffmpeg_args(name, country, crf)
 
-    frame_count = len(glob.glob(os.path.join(tasks_config.ET_HOMEPATH + 'etpro', 'screenshots', 'shot[0-9]*.tga')))
+    frame_count = len(glob.glob(os.path.join(tasks_config.ET_HOMEPATH, 'etpro', 'screenshots', 'shot[0-9]*.tga')))
 
     if frame_count == 0:
         raise RenderException("no screenshots captured")
