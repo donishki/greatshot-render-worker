@@ -120,7 +120,7 @@ def capture(start, end, exec_at_time_callback=None, etl=False, fps=50):
                               '+viewlog', '1', '+logfile', '2',
                               '+set', 'fs_game', 'etpro', '+set com_maxfps 125',
                               '+timescale', '0', '+demo', 'demo-render',
-                              '+timescale', '0', '+wait', '2',
+                              '+timescale', '0', '+wait', '20',
                               '+timescale', '1', '+exec', 'init-tga',
                               '+condump', 'init-tga.log', '+timescale', '1',
                               '+set', 'nextdemo', 'exec preinit-wav'
