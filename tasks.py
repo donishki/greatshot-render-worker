@@ -26,7 +26,7 @@ redis_broker = RedisBroker(url=tasks_config.REDIS, middleware=[], namespace=task
 dramatiq.set_broker(redis_broker)
 
 
-record_wav = """
+RECORD_WAV_CFG = """
 timescale 1
 com_maxfps 125
 timescale 1
@@ -34,6 +34,16 @@ echo "^1oooooooooooooooooo ^5WAV_RECORD ^1ooooooooooooooooooooooooooo"
 //exec cameras\\runs\\1stPos
 wav_record synctest
 set nextdemo quit
+"""
+
+PREINIT_WAV_CFG = """
+cl_avidemo 0
+demo {}
+timescale 1
+wait 38
+echo "^2preinit-wav.cfg"
+timescale 1
+exec init-wav
 """
 
 
@@ -91,7 +101,7 @@ def progress_capture(p: subprocess.Popen, callback, error):
             break
 
 
-def capture(start, end, exec_at_time_callback=None, etl=False, fps=50):
+def capture(start, end, exec_at_time_callback=None, etl=False, fps=50, demo_name='demo-render'):
     # http://stackoverflow.com/questions/5069224/handling-subprocess-crash-in-windows
     if etl:
         open(tasks_config.ETPATH + 'etmain\\init-tga.cfg', 'w').write(
@@ -111,15 +121,17 @@ def capture(start, end, exec_at_time_callback=None, etl=False, fps=50):
         with open(os.path.join(tasks_config.ET_HOMEPATH, 'etmain', 'init-tga.cfg'), 'w') as file:
             file.write('exec_at_time '+str(start)+' record-tga')
         with open(os.path.join(tasks_config.ET_HOMEPATH, 'etpro', 'record-wav.cfg'), 'w') as file:
-            file.write(record_wav+'\n'+'exec_at_time '+str(int(start)+1000)+' progress-1')
+            file.write(RECORD_WAV_CFG+'\n'+'exec_at_time '+str(int(start)+1000)+' progress-1')
         with open(os.path.join(tasks_config.ET_HOMEPATH, 'etmain', 'init-wav.cfg'), 'w') as file:
             file.write('exec_at_time '+str(start)+' record-wav')
+        with open(os.path.join(tasks_config.ET_HOMEPATH, 'etmain', 'preinit-wav.cfg'), 'w') as file:
+            file.write(PREINIT_WAV_CFG.format(demo_name))
         p = subprocess.Popen([os.path.join(tasks_config.ETPATH, tasks_config.ET_EXECUTABLE),
                               '+set', 'cl_profile', 'render-worker',
                               '+set', 'com_ignorecrash', '1',
                               '+viewlog', '1', '+logfile', '2',
                               '+set', 'fs_game', 'etpro', '+set com_maxfps 125',
-                              '+timescale', '0', '+demo', 'demo-render',
+                              '+timescale', '0', '+demo', demo_name,
                               '+timescale', '0', '+wait', '20',
                               '+timescale', '1', '+exec', 'init-tga',
                               '+condump', 'init-tga.log', '+timescale', '1',
@@ -154,7 +166,12 @@ def ffmpeg_args(name, country, crf, fps=50):
             name + "': fontcolor=white: fontsize=50: x=100: y=150+45.0-text_h-5",
         ]
         args += ['-i', '4x3/' + country + '.png']
-    args += ['-i', os.path.join(tasks_config.ET_HOMEPATH, 'etpro/wav/synctest.wav'), '-shortest', '-crf', str(crf), '-pix_fmt', 'yuv420p', 'render.mp4']
+    args += [
+        '-i',
+        os.path.join(tasks_config.ET_HOMEPATH, 'etpro', 'wav', 'synctest.wav'),
+        '-shortest', '-crf', str(crf),
+        '-pix_fmt', 'yuv420p', 'render.mp4'
+    ]
     return args
 
 
@@ -167,10 +184,11 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
     # return
 
     # download is finished too fast to set status
+    demo_name = 'demo-render'
     set_render_status(url_parsed, render_id, 'downloading demo...', 5)
-    demo_file_path = os.path.join(tasks_config.ET_HOMEPATH, 'etpro/demos/demo-render.dm_84')
+    demo_file_path = os.path.join(tasks_config.ET_HOMEPATH, 'etpro', 'demos', demo_name + '.dm_84')
     try:
-        os.mkdir(os.path.join(tasks_config.ET_HOMEPATH, 'etpro/demos'))
+        os.mkdir(os.path.join(tasks_config.ET_HOMEPATH, 'etpro', 'demos'))
     except FileExistsError:
         pass
 
@@ -238,7 +256,7 @@ def render(render_id, demo_url, start, end, name="", country=None, crf='23', etl
     r = requests.put(
         url_parsed.scheme + '://' + url_parsed.netloc + '/renders',
         auth=(tasks_config.RENDER_UPLOAD_AUTH_NAME, tasks_config.RENDER_UPLOAD_AUTH_PW),
-        files={filename: open(os.path.join(tasks_config.ET_HOMEPATH,'render.mp4'), 'rb')})
+        files={filename: open(os.path.join(tasks_config.ET_HOMEPATH, 'render.mp4'), 'rb')})
     # print('upload r code:' + str(r.status_code))
     if r.status_code == 200:
         set_render_status(url_parsed, render_id, 'finished', 100)
@@ -266,7 +284,7 @@ def test_progress(url_parsed, render_id):
     set_render_status(url_parsed, render_id, 'finished', 100)
 
 
-def test_capture_progress(start, end):
+def test_capture_progress(start, end, fps=None, demo_name=None):
     def exec_at_time_callback(time, sound, status=None):
         if time is not None:
             time -= 1000
@@ -279,7 +297,7 @@ def test_capture_progress(start, end):
         elif status is not None:
             print(status)
 
-    capture(start, end, exec_at_time_callback)
+    capture(start, end, exec_at_time_callback, fps=fps, demo_name=demo_name)
 
 
 class RenderException(Exception):
