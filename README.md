@@ -4,22 +4,30 @@ worker for creating renders for https://github.com/mittermichal/greatshot-web
 # Hosting worker
 
 If you want to host render worker for https://greatshot.xyz, I have to give you credentials for redis server and upload http auth.
- - have W:ET 2.60b with etpro mod and usual competitive maps in etmain
-- install python 3.5 or greater
+ - have W:ET 2.60b with etpro mod and usual competitive maps in etmain. At the moment it's not possible to run it headless on some server.
+- install python 3.5 or greater, make sure installer adds python to system PATH https://stackoverflow.com/questions/34900042/why-would-i-add-python-to-path
+
+- download ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
+- extract the ffmpeg archive anywhere
+
 - install git
+- open command line
 - `git clone https://github.com/mittermichal/greatshot-render-worker`
 - `cd greatshot-render-worker`
+- optionally create virtual enviroment
 - `pip install -r requirements.txt`
-- download ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
-- `cp tasks_config.sample.py tasks_config.py`
+
+- create copy of tasks_config.sample.py and name it tasks_config.py: `cp tasks_config.sample.py tasks_config.py`
 - edit tasks_config.py:
   - ETPATH = \<location ET.exe is\>
   - REDIS = \<redis credentials\>
-  - http upload auth:
+  - http upload auth, contact me to get it and also REDIS:
       - RENDER_UPLOAD_AUTH_NAME = ...
       - RENDER_UPLOAD_AUTH_PW = ...
   - DRAMATIQ_NS = 'prod'
   - FFMPEG = \<path to ffmpeg.exe with binary name included\>
 - copy profiles directory to etpro - contains render-worker profile with config
 - copy `etmain/preinit-wav.cfg` into etmain
-- run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or `run_worker.bat`
+- run worker: `dramatiq -t 1 -p 1 tasks render_heartbeat -Q render` or run `run_worker.bat`
+- pressing CTRL + C once should gracefully finish tasks, pressing it second time will kill it completely
+- you can create shortut to run_worker.bat for easy access
